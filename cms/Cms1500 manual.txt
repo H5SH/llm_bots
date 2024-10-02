@@ -1,0 +1,39 @@
+Instructions on how to fill out the 
+CMS 1500 Form 
+Item Instructions 
+Item 1Type of Health Insurance Co verage Applicable to the Claim  
+Show the type of health insurance co verage applicable to this claim by 
+checking the appropriate box, e.g., if a Medi care claim is being filed, check the 
+Medicare box. 
+Item 1aInsured’s ID Number  
+(Patient’s Medicare Health In surance Claim Number - HICN)  
+This is a required field. Enter the patient’s Medicare HICN whether Medicare 
+is the primary or the secondary payer. Be sure to include the suffix and do not 
+use spaces and/or dashes. (Example of proper HICN submission: 
+123456789A) An invalid HICN will cause a claim to deny or be rejected as 
+unprocessable.
+If a patient’s HICN begins with an alpha c haracter, their claims must be filed 
+to Railroad Medicare. The address is indicated here.  
+Palmetto Government Benefits Administration  
+PO BOX 10066  
+Augusta GA 30999
+Note:  Noridian Administrative Services (N AS) is prohibited from forwarding 
+such claims.
+Item 2Patient’s Name  
+This is a required field . Enter the patient’s last name, first name, and middle 
+initial, if any, as it appears on the patient’s Medicare card (e.g., Jones John J). 
+Include only one space between the last  name, first name, and middle initial. If 
+the name is not an identical match, the claim will be rejected as unprocessable.
+Do not submit extra spaces, nicknames, or descriptions such as Jr., Sr., 
+deceased, or the estate of (unless indicated on the Medicare card). Do not extend the beneficiary’s name bey ond the confines of this box.
+Item 3Patient’s Birth Date and Sex  
+Enter the patient’s 8-digit birt h date (MM | DD | CCYY) and sex. Only one 
+box should be indicated; either M or F. Marking both or neither will cause the claim to be rejected as unprocessable.
+  
+Item 4Insured’s Name  
+If Medicare is primary, leave blank . If there is insurance primary to 
+Medicare, either through the patient’s or spouse’s employment or any other 
+source, list the name of the insured here. When the insured and the patient are the same, enter the word SAME. 
+Item 5Patient’s Address and Telephone Number  
+This is a required field and must be filled in completely.  Enter the patient’s 
+mailing address and telephone number. On the first line enter the street address; the second line, the city and st ate; the third line,  the ZIP code and 
