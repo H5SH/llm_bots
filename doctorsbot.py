@@ -56,16 +56,16 @@ screen_name = {
 llm.output_parser = {"name": Field(max_length=12, type=str)} 
 llm.pydantic_program_mode = True 
 # llm = LlamaCPP()
-# embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
+embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
 Settings.llm = llm
-# Settings.embed_model = embed_model 
-# engine = create_engine("mysql+pymysql://root:%s@localhost:3306/doctorsapp" % quote_plus("1234hello1234"))
-# sql_database = SQLDatabase(engine)
-# query_engine = NLSQLTableQueryEngine(
-#     sql_database=sql_database,
-#     tables=["patients", "providers", "labs", "invoices", "ledgers", "manufacturers", "medicines", "migrations", "model_has_permissions", "model_has_roles", "options", "prescriptions", "provider_schedules", "providers", "vitals"],
-#     llm=llm
-# )
+Settings.embed_model = embed_model 
+engine = create_engine("mysql+pymysql://root:%s@localhost:3306/doctorsapp" % quote_plus("1234hello1234"))
+sql_database = SQLDatabase(engine)
+query_engine = NLSQLTableQueryEngine(
+    sql_database=sql_database,
+    tables=["patients", "providers", "labs", "invoices", "ledgers", "manufacturers", "medicines", "migrations", "model_has_permissions", "model_has_roles", "options", "prescriptions", "provider_schedules", "providers", "vitals"],
+    llm=llm
+)
 
 # program = LM
 screens = [
@@ -120,6 +120,10 @@ def read_root():
 @app.get("/doctors/bot/patient/vitals/{patient_id}")
 def read_item(patient_id: str, q: Union[str, None] = None):
     return {"patient_id": patient_id, "response": json.loads(response.source_nodes[0].node.text.replace('(', '').replace(')', ''))}
+
+@app.get("/doctors/bot/database/model/")
+def sql_connection(q: Union[str, None] = None):
+    query_engine.query(q)
 
 @app.get("/chat/doctors/bot")
 def navigation_test(q: Union[str, None]=None):
