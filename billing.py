@@ -1,49 +1,94 @@
 import nest_asyncio
-from fastapi import FastAPI
 from llama_index.core import (
     Settings, 
     VectorStoreIndex,
-    SimpleDirectoryReader 
 )
+from llama_parse import LlamaParse
 from llama_index.llms.groq import Groq
+from llama_index.core import SimpleDirectoryReader
+from llmsherpa.readers.file_reader import LayoutPDFReader
+from llama_index.core.query_engine import RouterQueryEngine
+from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
-from pathlib import Path
+from llama_index.core.schema import Document
 import os
-from pypdf import PdfReader
 
 nest_asyncio.apply()
 
-file_paths = [
-    'C:\H5SH\other\projects\ML_projects\sql_bot\\assests\Cms1500 manual.pdf',
-    'C:\H5SH\other\projects\ML_projects\sql_bot\\assests\cms1500.pdf'
-]
+llm = Groq(model="llama3-70b-8192")
+embed_model = HuggingFaceEmbedding(model_name='BAAI/bge-small-en-v1.5')
 
-output_dir = 'C:\H5SH\other\projects\ML_projects\sql_bot\\cms'
 
-for file_path in file_paths:
-    # page = next(iter())
-    name = os.path.splitext(os.path.basename(file_path))[0]
-    reader = PdfReader(file_path)
-    print(len(reader.pages))
-    page = reader.pages[0] 
-    text = page.extract_text()
+Settings.llm = llm
+Settings.embed_model = embed_model
 
-    cms_path = Path('cms')
-    if not cms_path.exists():
-        Path.mkdir(cms_path)
-    
-    with open(cms_path / f'{name}.txt', 'w') as fp:
-        fp.write(text)
+# doc_menual = LlamaParse(result_type='text').load_data("C:\H5SH\other\projects\ML_projects\llm_bot\\assests\Cms1500 manual.pdf")
+# doc_cms = LlamaParse(result_type='text').load_data("C:\H5SH\other\projects\ML_projects\llm_bot\\assests\\form-cms.pdf")
 
-# llm = Groq(model="llama3-8b-8192")
-# embed_model = HuggingFaceEmbedding(model_name='BAAI/bge-small-en-v1.5')
+# doc_both = LlamaParse(result_type='text').load_data("C:/H5SH/other/projects/ML_projects/llm_bot/assests/Cms1500-manual.pdf")
+llmsherpa_api_url = "https://readers.llmsherpa.com/api/document/developer/parseDocument?renderFormat=all"
+pdf_reader = LayoutPDFReader(llmsherpa_api_url)
 
-# index = VectorStoreIndex.from_documents()
+print(pdf_reader.parser_api_url)
 
-# Settings.llm = llm
-# Settings.embed_model = embed_model
+doc_form = pdf_reader.read_pdf('C:/H5SH/other/projects/ML_projects/llm_bot/assests/form-cms1500.pdf')
+# doc_manual = pdf_reader.read_pdf('C:/H5SH/other/projects/ML_projects/llm_bot/assests/Cms1500-manual_merged.pdf')
 
-# documents = SimpleDirectoryReader(input_files=['C:\H5SH\other\projects\ML_projects\sql_bot\\assests\Cms1500 manual.pdf']).load_data()
+# index = VectorStoreIndex([])
+# for chunk in doc_form.chunks():
+#     index.insert(Document(text=chunk.to_context_text(), extra_info={}))
+# query_engine = index.as_query_engine()
+
+# response = query_engine.query("how many fields in the document ?")
+
+# print(str(response))
+
+# documents = SimpleDirectoryReader(
+#     input_files=[
+#         'C:/H5SH/other/projects/ML_projects/llm_bot/assests/form-cms1500.pdf',
+#         'C:/H5SH/other/projects/ML_projects/llm_bot/assests/Cms1500-manual_merged.pdf'
+#     ]
+# ).load_data()
+
+# index = VectorStoreIndex.from_documents(documents)
+
+# query_engine = index.as_query_engine(similarity_top_k=3)
+
+
+## picking 10 fields  
+
+# vector_tool = QueryEngineTool(
+#     index.as_query_engine(),
+#     metadata=ToolMetadata(
+#         name="vector_search",
+#         description="Useful for searching for specific facts."
+#     )
+# )
+
+# summary_tool = QueryEngineTool(
+#     index.as_query_engine(response_mode="tree_summarize"),
+#     metadata=ToolMetadata(
+#         name="summary",
+#         description="Useful for summarizing an entire document."
+#     )
+# )
+
+# query_engine = RouterQueryEngine.from_defaults(
+#     [vector_tool, summary_tool], select_multi=True, verbose=True, llm=llm
+# )
+
+# q = ''
+
+# while(q != 'q'):
+#     print('Ask anything related to cmsform')
+#     q = input()
+#     response = query_engine.query(q)
+#     print(str(response))
+
+
+
+# print(str(response))
+
 
 # index = VectorStoreIndex.from_documents(documents)
 # query_engine = index.as_query_engine(similarity_top_k=3)
