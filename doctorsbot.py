@@ -25,15 +25,19 @@ from llama_index.core import (
 )
 from llama_index.core.query_engine import RetrieverQueryEngine
 from langchain_experimental.llms import LMFormatEnforcer
+import sys
+from pydantic import BaseModel, Field
+from typing import List
+
+from llama_index.program.lmformatenforcer import (
+    LMFormatEnforcerPydanticProgram
+)
 
 
-
-
-# from main import app
-
-class ScreenName(BaseModel):
-    name: str
-
+class BetterText(BaseModel):
+    changed: str
+    changes: str
+    
 app = FastAPI()
 
 origins = [
@@ -56,16 +60,16 @@ screen_name = {
 llm.output_parser = {"name": Field(max_length=12, type=str)} 
 llm.pydantic_program_mode = True 
 # llm = LlamaCPP()
-embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
-Settings.llm = llm
-Settings.embed_model = embed_model 
-engine = create_engine("mysql+pymysql://root:%s@localhost:3306/doctorsapp" % quote_plus("1234hello1234"))
-sql_database = SQLDatabase(engine)
-query_engine = NLSQLTableQueryEngine(
-    sql_database=sql_database,
-    tables=["patients", "providers", "labs", "invoices", "ledgers", "manufacturers", "medicines", "migrations", "model_has_permissions", "model_has_roles", "options", "prescriptions", "provider_schedules", "providers", "vitals"],
-    llm=llm
-)
+# embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
+# Settings.llm = llm
+# Settings.embed_model = embed_model 
+# engine = create_engine("mysql+pymysql://root:%s@localhost:3306/doctorsapp" % quote_plus("1234hello1234"))
+# sql_database = SQLDatabase(engine)
+# query_engine = NLSQLTableQueryEngine(
+#     sql_database=sql_database,
+#     tables=["patients", "providers", "labs", "invoices", "ledgers", "manufacturers", "medicines", "migrations", "model_has_permissions", "model_has_roles", "options", "prescriptions", "provider_schedules", "providers", "vitals"],
+#     llm=llm
+# )
 
 # program = LM
 screens = [
@@ -110,8 +114,8 @@ screens = [
 # driver = attach_to_session('http://127.0.6533.119:9515','bdef6783a05f0b3f885591e7d2c7b2aec1a89dea')
 
 # for controlling webpage
-driver = webdriver.Chrome()
-driver.get('http://doctorsapp.test:81/patient')
+# driver = webdriver.Chrome()
+# driver.get('http://doctorsapp.test:81/patient')
 
 @app.get("/")
 def read_root():
@@ -147,6 +151,22 @@ def navigation_test(q: Union[str, None]=None):
 # def enforcer_test(q: Union[str, None]=None):
 #     output = program(query=f"single word answer which screen to open from patient, provider, prescription, vitals, invoice and appointment according to {q}")
 #     return {'result': str(output)}
+
+
+@app.get("/improve/input")
+def improve_input(q: Union[str, None]=None):
+    # program = LMFormatEnforcerPydanticProgram(
+    #     output_cls=BetterText,
+    #     prompt_template_str=(
+    #         "Your response should be according to the following json schema: \n"
+    #         "{json_schema}\n"
+    #         "change should consist of the new response whiles changes should consist of the changes you made"
+    #     ),
+    #     llm=llm,
+    #     verbose=True
+    # )
+    response = llm.complete(f"make it better '{q}'")
+    return {'response': str(response)}
 
 if __name__ == '__main__':
     uvicorn.run(app)

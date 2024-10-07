@@ -11,6 +11,7 @@ from llama_index.core.query_engine import RouterQueryEngine
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core.schema import Document
+from langchain_community.document_loaders.llmsherpa import LLMSherpaFileLoader
 import os
 
 nest_asyncio.apply()
@@ -26,18 +27,21 @@ Settings.embed_model = embed_model
 # doc_cms = LlamaParse(result_type='text').load_data("C:\H5SH\other\projects\ML_projects\llm_bot\\assests\\form-cms.pdf")
 
 # doc_both = LlamaParse(result_type='text').load_data("C:/H5SH/other/projects/ML_projects/llm_bot/assests/Cms1500-manual.pdf")
+
 llmsherpa_api_url = "https://readers.llmsherpa.com/api/document/developer/parseDocument?renderFormat=all"
 pdf_reader = LayoutPDFReader(llmsherpa_api_url)
 
-print(pdf_reader.parser_api_url)
+
+# print(pdf_reader.parser_api_url)
 
 doc_form = pdf_reader.read_pdf('C:/H5SH/other/projects/ML_projects/llm_bot/assests/form-cms1500.pdf')
 # doc_manual = pdf_reader.read_pdf('C:/H5SH/other/projects/ML_projects/llm_bot/assests/Cms1500-manual_merged.pdf')
 
-# index = VectorStoreIndex([])
-# for chunk in doc_form.chunks():
-#     index.insert(Document(text=chunk.to_context_text(), extra_info={}))
-# query_engine = index.as_query_engine()
+
+index = VectorStoreIndex([])
+for chunk in doc_form.chunks():
+    index.insert(Document(text=chunk.to_context_text(), extra_info={}))
+query_engine = index.as_query_engine()
 
 # response = query_engine.query("how many fields in the document ?")
 
